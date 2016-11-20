@@ -1,6 +1,6 @@
 package model.entities;
 
-import net.slashie.libjcsi.ConsoleSystemInterface;
+
 import model.Board;
 
 abstract public class Cell {
@@ -9,7 +9,16 @@ abstract public class Cell {
 	protected boolean isDeath;
 	protected String status = "";
 	
-	public int speed = 1; 
+	//!!!!!!!{crutch :-) } only for birth mechanism
+	protected Cell child;
+	//!!!!!!!
+	
+	 
+	
+	public void updateState() {
+		//после каждого хода объекта, восстанавливаются расходные (скорость и м.б .еще что-то
+		//
+	}
 	
 	public Cell(int x, int y) {
 		this.x = x;
@@ -17,8 +26,20 @@ abstract public class Cell {
 		isDeath = false;
 	}
 	
+	public int getSight() {
+		return 0;
+	}
+	
 	public void applyRule(Board b) {
 		
+	}
+	
+	public void setChild(Cell c) {
+		this.child = c;
+	}
+	
+	public Cell getChild() {
+		return child;
 	}
 	
 	public void kill() {
@@ -44,20 +65,12 @@ abstract public class Cell {
 	public void setY(int y) {
 		this.y = y;
 	}
-	
-	public int getColor() {
-		switch(type) {
-		case PLANT:
-			return ConsoleSystemInterface.GREEN;
-		case HERBIVORUS:
-			
-			return ConsoleSystemInterface.BLUE;
-		case PREDATOR:
-			return ConsoleSystemInterface.RED;
-		}
-		
-		return ConsoleSystemInterface.GRAY;
+
+	public Type getType() {
+		return type;
 	}
+
+
 	
 	public void setStatus(String status) {
 		this.status = status;

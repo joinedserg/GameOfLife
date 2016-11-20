@@ -1,6 +1,7 @@
 package model.entities;
 
 import rules.RuleAging;
+import rules.RuleBirth;
 import rules.RuleStarve;
 
 
@@ -11,8 +12,16 @@ public class Plant extends Specimen {
 		super(xPos, yPos);
 		
 		this.rulesOneself.add(new RuleAging());
-		speed = 0;
+		this.rulesOneself.add(new RuleBirth());
+		currentSpeed = 0;
 		this.type = Type.PLANT;
 	}
 
+	@Override
+	public Cell birth(Specimen parent2, int xPos, int yPos) {
+		
+		child = new Plant(xPos, yPos);		
+		return child;
+	}
+	
 }

@@ -3,11 +3,13 @@ package model;
 import java.util.*;
 import model.entities.*;
 
+import visualization.Visualization;
+
 public class CellularAutomat {
 
 	List<Cell> cells;
 	Board board;
-	
+
 	/**/
 	List<Plant> plants;
 	List<Herbivorous> herbivorous;
@@ -30,21 +32,32 @@ public class CellularAutomat {
 		catch(Exception ex) {
 			board = Board.getBoard();
 		}
-		//plants = new ArrayList();
-		//herbivorous = new ArrayList();
-		//predators = new ArrayList();
 
-
-		cells.add(new Plant(0,2));
-		cells.add(new Plant(0,4));
-		cells.add(new Plant(0,4));
-		cells.add(new Plant(0,3));
+		//cells.add(new Plant(0,2));
+		cells.add(new Herbivorous(0,0));
+		cells.add(new Herbivorous(0,1));
+		cells.add(new Herbivorous(1,1));
+		cells.add(new Herbivorous(1,2));
+		
+		
+		
+		//cells.add(new Plant(2,2));
+		//cells.add(new Plant(3,3));
+		
+		cells.add(new Plant(55,14));
+		/*cells.add(new Herbivorous(3,4));
 		cells.add(new Herbivorous(4,4));
-		cells.add(new Predator(5,6));		
+		cells.add(new Herbivorous(4,5));
+		
+		
 
-
-		this.maxX = height;
-		this.maxY = width;
+		cells.add(new Plant(24,24));
+		cells.add(new Plant(14,12));*/
+		cells.add(new Predator(20,6));
+		cells.add(new Predator(21,7));
+		
+		this.maxX = width;
+		this.maxY = height;
 
 		updateCount();
 	}
@@ -62,52 +75,49 @@ public class CellularAutomat {
 				countPredators++;
 			}
 		}
-
 	}
 
 	public CellularAutomat(String path2config) {
-
 
 	}
 
 	public int getCountObject() {
 		return cells.size();
 	}
-	
+
 	public String toString() {
 		return "Status : plants: " + countPlants + "  herbivorous: " + countHerbivorous 
 				+ "  predator:  " + countPredators;
 	}
 
-	public void step() {
-		int i = 0;
-
-		for(Iterator<Cell> itr = cells.iterator(); itr.hasNext();) {
+	public void step(Visualization v) { // v добавил для дебага		
+		//можно проверить и добавлять лишь один раз, в начале 
+		board.toReflect(cells);
+		
+		for(ListIterator<Cell> itr = cells.listIterator(); itr.hasNext();) {			
 			Cell c = itr.next();
+			c.applyRule(board);
 
-			c.applyRule(board);			
 			if(c.isDeath()) {
 				System.out.println("Object " + c);
+				
+				//удаляем клетку из поля взаимодействий и из очереди  
+				board.clearCell(c);
 				itr.remove();
 				continue;
 			}
-
-			if(c.speed == 0) {
-				continue;
+			if(c.getChild() != null) {
+				//При рождении новой клетки, её необходимо добавить в очередь и в поле взаимодействий				
+				itr.add(c.getChild());
+				
+				//!!clear child
+				c.setChild(null);
 			}
 
-			if(c.getX() == 0) {
-				c.speed = 1;
-			}
-			else if(c.getX() == maxX-1) {
-				c.speed = -1;
-			}
-			int x = c.getX();
-			x += c.speed; 
 
-			c.setX(x);
-			i++;
-			
+			//v.toReflect(this);
+			System.out.print("");
+			c.updateState();
 		}
 		updateCount();
 		System.out.println(this);

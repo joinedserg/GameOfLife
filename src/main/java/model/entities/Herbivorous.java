@@ -1,20 +1,36 @@
 package model.entities;
 
-import rules.RuleAging;
-import rules.RuleStarve;
+
+import rules.*;
+
 
 public class Herbivorous extends Specimen {
 
 
 	public Herbivorous(int xPos, int yPos) {
 		super(xPos, yPos);
-
+		
 		this.rulesOneself.add(new RuleAging());
 		this.rulesOneself.add(new RuleStarve());
+		this.rulesOneself.add(new RuleBirth());
+		this.rulesOneself.add(new RuleMove2Eat());
 
+		this.maxSpeed = 20;
+		this.currentSpeed = this.maxSpeed;
 		this.type = Type.HERBIVORUS;
 	}
 
+	@Override
+	public Cell birth(Specimen parent2, int xPos, int yPos) {
+		child = new Herbivorous(xPos, yPos);
+		return child;
+	}
+	
+	@Override
+	public int getSight() {
+		return currentSpeed;
+	}
+	
 	/*@Override
 	public void stepHunger() {
 		if(isDeath == true) {

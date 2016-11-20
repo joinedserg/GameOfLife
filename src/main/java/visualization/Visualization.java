@@ -6,6 +6,7 @@ import net.slashie.libjcsi.wswing.*;
 
 import model.entities.Cell; 
 
+import model.entities.Type;
 
 public class Visualization {
 
@@ -36,7 +37,27 @@ public class Visualization {
 			//System.out.println("i = " + i + " " + x);
 			//i++;
 			//cons.print(1,1,"Hello, Hello!", ConsoleSystemInterface.CYAN);
-			cons.print(c.getX(), c.getY(), "*", c.getColor());
+			//c.getType();
+			int color = 0;
+			switch(c.getType()) {
+				case PLANT:
+					color = ConsoleSystemInterface.GREEN;
+					break;
+				case HERBIVORUS:
+					color = ConsoleSystemInterface.BLUE;
+					break;
+
+				case PREDATOR:
+					color = ConsoleSystemInterface.RED;
+					break;
+
+			}
+			try {
+				cons.print(c.getX(), c.getY(), "*", color);
+			}
+			catch(Exception ex) {
+				ex.printStackTrace();
+			}
 		}		
 		
 	}
